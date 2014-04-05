@@ -1,0 +1,15 @@
+dt_web_home:
+    path:      /
+    defaults:  { _controller: DtWebBundle:HomePage:index }
+    
+dt_web_point_of_interest:
+    path:      /bezienswaardigheden
+    defaults:  { _controller: DtWebBundle:Poi:index }
+    
+dt_web_travel_planner:
+    path:      /reisplanner
+    defaults:  { _controller: DtWebBundle:TravelPlanner:index }
+    
+dt_web_contact:
+    path:      /contact
+    defaults:  { _controller: DtWebBundle:Contact:index }

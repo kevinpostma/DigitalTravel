@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+
+        <title>Jumbotron Template for Bootstrap</title>
+
+        <!-- Bootstrap core CSS -->
+        {% block css %}
+            {% block default_css %}
+                {% stylesheets 'bundles/dtweb/css/*' filter='cssrewrite' %}
+            <link rel="stylesheet" href="{{ asset_url }}" />
+                {% endstylesheets %}
+            {% endblock %}
+            {% block custom_css %}
+
+            {% endblock %}
+        {% endblock %}
+
+
+        {% block default_js %}
+            {% javascripts '@DtWebBundle/Resources/public/js/*' %}
+                <script type="text/javascript" src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+        {% endblock %}
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+          <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+
+    <body {% block bodyattributes '' %}>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 dt-header">
+                    <div class="col-xs-4">
+                        <img src="http://placehold.it/350x100" alt="logo"/>
+                    </div>
+                    <div class="col-xs-4">
+                        <ul>
+                            <li><a href="#link1">link 1</a></li>
+                            <li><a href="#link2">link 2</a></li>
+                            <li><a href="#link3">link 3</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="dt-profile text-right">
+                            <div class="dt-profile-meta">
+                                <h3>Kevin Postma <small>(uitloggen)</small></h3>
+                            </div>
+                            <div class="dt-profile-image">
+                                <img src="http://placehold.it/100x100" alt="profile image"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="navbar navbar-inverse navbar-default" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{{ path('dt_web_home') }}">Home</a>
+                    <a class="navbar-brand" href="{{ path('dt_web_point_of_interest') }}">Bezienswaardigheden</a>
+                    <a class="navbar-brand" href="{{ path('dt_web_travel_planner') }}">Reisplanner</a>
+                    <a class="navbar-brand" href="{{ path('dt_web_contact') }}">Contact</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                </div><!--/.navbar-collapse -->
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Example row of columns -->
+            {% block content %}
+            <div class="row dt-content dt-home">
+                <div class="col-md-4">
+                    <h2>Heading</h2>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam et libero aliquet, imperdiet mi a, imperdiet leo. Nam interdum, purus quis euismod lacinia, nisi ante blandit ligula, in rutrum augue ante ut sapien. Vivamus a dictum libero. Aliquam erat volutpat. Morbi pharetra, nunc in eleifend commodo, felis dolor porttitor massa, quis gravida lectus sem et neque. Vestibulum in purus risus. Ut sed vulputate diam, vel ullamcorper felis. Morbi vestibulum massa sed nisl fermentum fringilla. Fusce rhoncus, nulla eu porttitor fringilla, mi urna scelerisque arcu, eget molestie ligula nisl a est. Aenean blandit mattis mi eget semper. Nulla ut metus ut est iaculis tristique eget in sem.</p>
+                    <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+                </div>
+                <div class="col-md-8 dt-gallery">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <img class="col-xs-12" src="http://placehold.it/1200x400" alt=""/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img class="col-xs-12" src="http://placehold.it/800x400" alt="" />
+                        </div>
+                        <div class="col-md-6">
+                            <img class="col-xs-12" src="http://placehold.it/800x400" alt="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
+            <hr>
+
+            <footer>
+                <p>&copy; Digital Travel 2014</p>
+            </footer>
+        </div> <!-- /container -->
+
+
+        <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+    {% block js %}
+        {% block custom_js %}
+
+        {% endblock %}
+    {% endblock %}
+    </body>
+</html>

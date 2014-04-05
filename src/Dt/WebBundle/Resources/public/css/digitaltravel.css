@@ -1,0 +1,33 @@
+
+
+/** header **/
+.dt-header { padding :10px; }
+.dt-header ul { list-style:none; padding: 0px; margin-top: 85px; }
+.dt-header ul li { display:inline-block; margin-right: 10px }
+.dt-header .dt-profile {  }
+.dt-header .dt-profile .dt-profile-meta { display: inline-block; vertical-align: top; }
+.dt-header .dt-profile .dt-profile-meta h3 { font-weight: bold; font-size: 17px; margin-top: 0px; }
+.dt-header .dt-profile .dt-profile-meta h3 small { display:block; }
+.dt-header .dt-profile .dt-profile-image { display: inline-block; }
+
+/** content **/
+.dt-content {  }
+
+/** content home **/
+.dt-content.dt-home {  }
+.dt-content.dt-home .dt-gallery {  }
+.dt-content.dt-home .dt-gallery .row { margin-bottom:10px; }
+
+/** content contact **/
+.dt-content.dt-contact {  }
+.dt-content.dt-contact .dt-faq {  }
+.dt-content.dt-contact .dt-faq .dt-faq-item {  }
+.dt-content.dt-contact .dt-faq .dt-faq-item h2 { background: #DDDDDD; padding: 12px;  margin-top: 5px; cursor: pointer; }
+.dt-content.dt-contact .dt-faq .dt-faq-item h2 i {  }
+
+.dt-content.dt-contact .dt-form {  }
+.dt-content.dt-contact .dt-form textarea { height: 200px; }
+.dt-content.dt-contact .dt-form .dt-form-loader {  }
+.dt-content.dt-contact .dt-form .dt-form-loader img.dt-form-loader-image { margin-top:200px; }
+.dt-content.dt-contact .dt-form .dt-form-loader h5 { display: block; }
+.dt-content.dt-contact .dt-form .dt-form-loader h5 small { display: block; }  
