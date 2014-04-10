@@ -6,6 +6,24 @@ dt_web_point_of_interest:
     path:      /bezienswaardigheden
     defaults:  { _controller: DtWebBundle:Poi:index }
     
+dt_web_point_of_interests_pagination:
+    path:       /bezienswaardigheden/{start}/{limit}
+    defaults:  { _controller: DtWebBundle:Poi:Pois }
+    options:
+        expose: true
+        
+dt_web_point_of_interests_countries:
+    path:       /bezienswaardigheden/landen
+    defaults:  { _controller: DtWebBundle:Poi:countries }
+    options:
+        expose: true
+        
+dt_web_point_of_interests_tags:
+    path:       /bezienswaardigheden/tags
+    defaults:  { _controller: DtWebBundle:Poi:tags }
+    options:
+        expose: true
+    
 dt_web_travel_planner:
     path:      /reisplanner
     defaults:  { _controller: DtWebBundle:TravelPlanner:index }

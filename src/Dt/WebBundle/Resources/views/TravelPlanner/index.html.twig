@@ -1,1 +1,112 @@
 {% extends 'DtWebBundle::layout.html.twig' %}
+
+{% block bodyattributes %}ng-app="contactApp" ng-controller="contactController"{% endblock %}
+
+{% block content %}
+
+<div class="row dt-content dt-travelplanner">
+
+    {% verbatim %}
+    <div class="row dt-planner" ng-controller="filterController" ng-init="showfilters=true">
+        <div class="col-lg-12 search">
+            <div class="form-group">
+                <form class="form-inline">
+                    <input type="text" class="form-control" id="from_location" ng-model="from_location" typeahead="value for value in locations | filter:$viewValue | limitTo:8"  placeholder="van bijv. (amsterdam)"/>
+                    <input type="text" class="form-control" id="to_location" ng-model="to_location" typeahead="value for value in locations | filter:$viewValue | limitTo:8"  placeholder="naar bijv. (parijs)"/>
+                    <button type="submit" class="btn btn-primary">plan reis</button>
+                    <button type="button" class="btn btn-info" ng-click="addFilter()">voeg voorkeur toe</button>
+                    <button type="button" class="btn btn-default" ng-click="showfilters = false" ng-show="(filters.length > 0) && (showfilters == true)">Verberg filters</button>
+                    <button type="button" class="btn btn-default" ng-click="showfilters = true" ng-show="(filters.length > 0) && (showfilters == false)">Bekijk filters</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-12 filter" ng-show="(filters.length > 0) && (showfilters == true)">
+            <div class="form-group" ng-repeat="filter in filters track by $index">
+                <form class="form-inline">
+                    <select class="form-control" ng-model="filter.type">
+                        <option value="locations">Stad</option>
+                        <option value="pois">Bezienswaardigheid</option>
+                    </select>
+                    <input type="text" id="to_location" ng-if="filter.type == 'locations'" class="form-control" ng-model="filter.value" typeahead="value for value in locations | filter:$viewValue | limitTo:8" placeholder="..."/>
+                    <input type="text" id="to_location" ng-if="filter.type == 'pois'" class="form-control" ng-model="filter.value" typeahead="value for value in pois | filter:$viewValue | limitTo:8" placeholder="..."/>
+                    <select class="form-control" ng-show="($index > 0)" ng-model="filter.method">
+                        <option value="en">En</option>
+                        <option value="of">Of</option>
+                    </select>
+                    <button type="button" class="btn btn-danger" ng-click="filters.pop($index)"><i class="glyphicon glyphicon-trash"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-danger" ng-repeat="error in errors">{{ error }}</div>
+        </div>
+    </div>
+
+    <div class="col-md-3 dt-pois">
+        <h1>Bezienswaardigheden</h1>
+        <div class="row poi">
+            <div class="col-xs-3">
+                <img src="http://placehold.it/50x50" alt="bezienswaardigheid"/>
+            </div>
+            <div class="col-xs-9">
+                <h2>Parijs het loo</h2>
+                <a href="bekijk informatie" title="Meer informatie over Parijs het loo">Meer informatie over Parijs het loo</a>
+            </div>
+        </div>
+        
+        <div class="row poi">
+            <div class="col-xs-3">
+                <img src="http://placehold.it/50x50" alt="bezienswaardigheid"/>
+            </div>
+            <div class="col-xs-9">
+                <h2>Eiffeltoren</h2>
+                <a href="bekijk informatie" title="Meer informatie over Parijs het loo">Meer informatie over Parijs het loo</a>
+            </div>
+        </div>
+        
+        <div class="row poi">
+            <div class="col-xs-3">
+                <img src="http://placehold.it/50x50" alt="bezienswaardigheid"/>
+            </div>
+            <div class="col-xs-9">
+                <h2>Notre dame</h2>
+                <a href="bekijk informatie" title="Meer informatie over Parijs het loo">Meer informatie over Parijs het loo</a>
+            </div>
+        </div>
+        
+        <div class="row poi">
+            <div class="col-xs-3">
+                <img src="http://placehold.it/50x50" alt="bezienswaardigheid"/>
+            </div>
+            <div class="col-xs-9">
+                <h2>Vrijheidsbeeld</h2>
+                <a href="bekijk informatie" title="Meer informatie over Parijs het loo">Meer informatie over Parijs het loo</a>
+            </div>
+        </div>
+    </div>
+    {% endverbatim %}
+
+
+    <div class="col-md-9 dt-chart-wrap" ng-controller="listController" ng-init="init()">
+        {% verbatim %}
+        <div class="row">
+            <div class="col-md-12">
+                <iframe class="col-xs-12 dt-chart" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.nl/?ie=UTF8&amp;ll=51.631657,7.1521&amp;spn=6.049996,16.907959&amp;t=m&amp;z=7&amp;output=embed"></iframe><br />
+            </div>
+        </div>
+        {% endverbatim %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block custom_js %}
+
+{% javascripts '@DtWebBundle/Resources/public/js/pages/travelplanner.js' %}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+{% endblock %}

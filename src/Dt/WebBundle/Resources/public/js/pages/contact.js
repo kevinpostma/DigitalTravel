@@ -1,6 +1,6 @@
 var contactApp = angular.module('contactApp', ['ngAnimate']);
 
-contactApp.controller('contactController', function($scope) {
+contactApp.controller('contactController', function($scope ,$timeout) {
     
     $scope.errors = new Array();
     
@@ -9,34 +9,34 @@ contactApp.controller('contactController', function($scope) {
         
         $timeout(function () {
             $scope.errors.pop();
-        }, 500);
+        }, 5000);
     };
     
 });
 
-contactApp.controller('formController', function($scope){
+contactApp.controller('formController', function($scope, $timeout){
     
     $scope.form = {
         firstname : '',
         lastname : '',
         email : '',
-        text : ''
+        message : ''
     };
     
     $scope.submitting = false;
     
     $scope.submit = function() {
-        $scope.submitting = true;
         
-        console.debug($scope.form.text);
-        if($scope.form.text.length < 10) {
+        if($scope.form.message.length < 10) {
             $scope.$parent.addError('Het bericht dat je hebt ingetypt is te kort, Dit moet minimaal 10 tekens zijn!');
         }
         
         if($scope.$parent.errors.length == 0) {
+            $scope.loading = true;
+            $scope.submitting = true;
             $timeout(function () {
-                $scope.submitting = false;
-            }, 500);
+                $scope.loading = false;
+            }, 3000);
         }
         return false;
     }

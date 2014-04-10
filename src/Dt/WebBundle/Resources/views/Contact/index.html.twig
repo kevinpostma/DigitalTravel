@@ -6,12 +6,14 @@
 
 <div class="row dt-content dt-contact">
     {% verbatim %}
-    <div class="col-lg-12">
-        <div class="alert alert-danger" ng-repeat="error in errors">{{ error }}</div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-danger" ng-repeat="error in errors">{{ error }}</div>
+        </div>
     </div>
     
     <div class="col-md-7 dt-faq" ng-controller="faqController" ng-init="init()">
-        <div class="row dt-faq-item toggle" ng-repeat="faq in faqs">
+        <div class="row dt-faq-item flip-in" ng-repeat="faq in faqs">
             <h2 ng-click="showDetails = ! showDetails">{{ faq.title }} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h2>
             <div class="col-lg-12 dt-faq-item-content slide-down" ng-show="showDetails">
                 <p>{{ faq.content }}</p>
@@ -25,7 +27,7 @@
         <div class="row scale-fade-in dt-form-loader" ng-show="submitting">
             <div class="col-md-12 text-center">
                 {% image '@DtWebBundle/Resources/public/images/loading.gif' %}
-                    <img src="{{ asset_url }}" alt="submitting form" title="submitting form" class="dt-form-loader-image"/>
+                    <img src="{{ asset_url }}" alt="submitting form" title="submitting form" ng-show="submitting && loading" class="dt-form-loader-image toggle"/>
                 {% endimage %}
                     <h5> Bedankt voor uw bericht. <small>We proberen uw bericht zo spoedig mogelijk te beantwoorden</small></h5>
             </div>

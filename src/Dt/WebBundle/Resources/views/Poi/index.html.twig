@@ -1,1 +1,68 @@
 {% extends 'DtWebBundle::layout.html.twig' %}
+
+{% block bodyattributes %}ng-app="contactApp" ng-controller="contactController"{% endblock %}
+
+{% block content %}
+
+<div class="row dt-content dt-poi">
+    {% verbatim %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-danger" ng-repeat="error in errors">{{ error }}</div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 dt-filter" ng-controller="filterController" ng-init="init()">
+        <h2>Filter op land</h2>
+        <ul>
+            <li ng-repeat="country in countries">{{ country.country }}</li>
+        </ul>
+        <h2>Filter op categorie</h2>
+        <ul>
+            <li ng-repeat="tag in tags">{{ tag.tag }}</li>
+        </ul>
+    </div>
+    {% endverbatim %}
+    
+    
+    <div class="col-md-9 dt-pois" ng-controller="listController" ng-init="init()">
+        <div class="row flip-in dt-poi-loader" ng-show="(pois.length > 0) == false">
+            <div class="col-md-12 text-center">
+                {% image '@DtWebBundle/Resources/public/images/loading.gif' %}
+                    <img src="{{ asset_url }}" alt="submitting form" title="submitting form" class="dt-poi-loader-image toggle"/>
+                {% endimage %}
+                    <h5> Bezig met laden van bezienswaardigheden. <small><a href="{{ path('dt_web_travel_planner') }}">Klik hier om een route te plannen!</a></small></h5>
+            </div>
+        </div>
+        
+        {% verbatim %}
+        <div class="row flip-in dt-poi" ng-repeat="poi in pois track by $index">
+            <div class="col-md-12">
+                <div class="col-xs-2 dt-poi-image">
+                    <img src="http://placehold.it/100x100" alt="image"/>
+                </div>
+                <div class="col-xs-10 dt-poi-detail">
+                    <h1>{{ poi.title }}</h1>
+                    <p>{{ poi.description }}</p>
+                    <rating class="dt-rating" value="poi.rating" max="maxRate" readonly="true" on-hover="hoveringOver(value)" on-leave="overStar = null"></rating>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row" ng-show="(pois.length > 0) == true">
+            <div class="col-md-12 text-center">
+                <pagination total-items="totalItems" items-per-page="maxPerPage" page="currentPage"></pagination>
+            </div>
+        </div>
+        {% endverbatim %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block custom_js %}
+
+{% javascripts '@DtWebBundle/Resources/public/js/pages/poi.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+{% endblock %}

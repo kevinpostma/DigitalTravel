@@ -1,3 +1,6 @@
 dt_web:
     resource: "@DtWebBundle/Resources/config/routing/main.yml"
     prefix:   /
+    
+fos_js_routing:
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"

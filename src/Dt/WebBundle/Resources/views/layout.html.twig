@@ -24,6 +24,8 @@
 
 
         {% block default_js %}
+            <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+            <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
             {% javascripts '@DtWebBundle/Resources/public/js/*' %}
                 <script type="text/javascript" src="{{ asset_url }}"></script>
             {% endjavascripts %}
@@ -55,7 +57,9 @@
                                 <h3>Kevin Postma <small>(uitloggen)</small></h3>
                             </div>
                             <div class="dt-profile-image">
-                                <img src="http://placehold.it/100x100" alt="profile image"/>
+                                {% image '@DtWebBundle/Resources/public/images/kevinprofile.jpg' %}
+                                    <img src="{{ asset_url }}" alt="profile image" title="Kevin Postma" ng-show="true" class="toggle"/>
+                                {% endimage %}
                             </div>
                         </div>
                     </div>
