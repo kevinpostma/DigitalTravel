@@ -22,7 +22,8 @@
         "friendsofsymfony/jsrouting-bundle": "1.5.3",
         "klaussilveira/neo4j-ogm-bundle": "dev-master",
         "hirevoice/neo4jphp-ogm": "dev-master",
-        "everyman/neo4jphp": "dev-master"
+        "everyman/neo4jphp": "dev-master",
+        "jms/serializer-bundle": "0.13.0"
     },
     "scripts": {
         "post-install-cmd": [

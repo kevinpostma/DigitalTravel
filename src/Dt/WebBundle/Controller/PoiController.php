@@ -18,6 +18,10 @@ class PoiController extends Controller
     
     public function poisAction($start, $limit)
     {
+        $em = $this->getDoctrine()->getManager();
+        $em->getRepository('DtCoreBundle:Location');
+        
+        
         $items = array();
         for($i = 0; $i < $limit; $i++) {
             $items[] = array(
@@ -40,51 +44,11 @@ class PoiController extends Controller
     
     public function countriesAction() {
         
-        $countries = array(
-            array(
-                'country' => "Nederland",
-                'shortcode' => "NL"
-            ),
-            array(
-                'country' => "Verenigde Staten",
-                'shortcode' => "US"
-            ),
-            array(
-                'country' => "Verenigd Koninkrijk",
-                'shortcode' => "UK"
-            ),
-            array(
-                'country' => "Frankrijk",
-                'shortcode' => "FR"
-            ),
-            array(
-                'country' => "België",
-                'shortcode' => "BE"
-            ),
-            array(
-                'country' => "Duitsland",
-                'shortcode' => "DE"
-            ),
-            array(
-                'country' => "Spanje",
-                'shortcode' => "ESP"
-            ),
-            array(
-                'country' => "Switserland",
-                'shortcode' => "SYR"
-            ),
-            array(
-                'country' => "Denemarken",
-                'shortcode' => "DNK"
-            ),
-            array(
-                'country' => "Egypte",
-                'shortcode' => "EGY"
-            )
-        );
+        $em = $this->getDoctrine()->getManager();
+        $countryRepository = $em->getRepository('DtCoreBundle:Country');
         
-        
-        
+        $countries = $countryRepository->findAll();
+
         return new Response(json_encode($countries));
     }
     

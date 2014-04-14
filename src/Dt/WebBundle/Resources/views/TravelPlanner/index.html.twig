@@ -1,19 +1,19 @@
 {% extends 'DtWebBundle::layout.html.twig' %}
 
-{% block bodyattributes %}ng-app="contactApp" ng-controller="contactController"{% endblock %}
+{% block bodyattributes %}ng-app="travelplannerApp" ng-controller="travelplannerController" ng-init="init()"{% endblock %}
 
 {% block content %}
 
 <div class="row dt-content dt-travelplanner">
 
     {% verbatim %}
-    <div class="row dt-planner" ng-controller="filterController" ng-init="showfilters=true">
+    <div class="row dt-planner" ng-controller="filterController" ng-init="showfilters=true; init();">
         <div class="col-lg-12 search">
             <div class="form-group">
                 <form class="form-inline">
                     <input type="text" class="form-control" id="from_location" ng-model="from_location" typeahead="value for value in locations | filter:$viewValue | limitTo:8"  placeholder="van bijv. (amsterdam)"/>
                     <input type="text" class="form-control" id="to_location" ng-model="to_location" typeahead="value for value in locations | filter:$viewValue | limitTo:8"  placeholder="naar bijv. (parijs)"/>
-                    <button type="submit" class="btn btn-primary">plan reis</button>
+                    <button type="submit" class="btn btn-primary" ng-click="calculateRoute()">plan reis</button>
                     <button type="button" class="btn btn-info" ng-click="addFilter()">voeg voorkeur toe</button>
                     <button type="button" class="btn btn-default" ng-click="showfilters = false" ng-show="(filters.length > 0) && (showfilters == true)">Verberg filters</button>
                     <button type="button" class="btn btn-default" ng-click="showfilters = true" ng-show="(filters.length > 0) && (showfilters == false)">Bekijk filters</button>
@@ -91,11 +91,14 @@
     {% endverbatim %}
 
 
-    <div class="col-md-9 dt-chart-wrap" ng-controller="listController" ng-init="init()">
+    <div class="col-md-9 dt-chart-wrap" ng-controller="mapsController" ng-init="init()">
         {% verbatim %}
         <div class="row">
             <div class="col-md-12">
-                <iframe class="col-xs-12 dt-chart" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.nl/?ie=UTF8&amp;ll=51.631657,7.1521&amp;spn=6.049996,16.907959&amp;t=m&amp;z=7&amp;output=embed"></iframe><br />
+                <google-map center="map.center" refresh="map.refresh" draggable="true" zoom="map.zoom">
+                    <markers models='markers.models' coords="self" ></markers>
+                    <polyline path='polyline.path' visible='polyline.visible' editable="polyline.editable" draggable="polyline.draggable" geodesic="polyline.geodesic" stroke="polyline.stroke"></polyline>
+                </google-map>
             </div>
         </div>
         {% endverbatim %}
@@ -106,7 +109,15 @@
 
 {% block custom_js %}
 
+<script src='//maps.googleapis.com/maps/api/js?sensor=false'></script>
+
+{% javascripts '@DtWebBundle/Resources/public/js/pages/angular-google-maps.js' %}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
 {% javascripts '@DtWebBundle/Resources/public/js/pages/travelplanner.js' %}
 <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
+
+
 {% endblock %}

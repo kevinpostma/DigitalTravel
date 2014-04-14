@@ -67,3 +67,8 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+neo4j_ogm:
+    host: 5.22.248.40
+    port: 7474
+    debug: true

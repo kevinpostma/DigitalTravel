@@ -28,6 +28,33 @@ dt_web_travel_planner:
     path:      /reisplanner
     defaults:  { _controller: DtWebBundle:TravelPlanner:index }
     
+dt_web_travel_neotest:
+    path:      /neo4jtest
+    defaults:  { _controller: DtWebBundle:TravelPlanner:neotest }
+    
 dt_web_contact:
     path:      /contact
     defaults:  { _controller: DtWebBundle:Contact:index }
+    
+    
+
+
+#api -------------------------------
+dt_api_locations:
+    path:       /api/locations
+    defaults:   { _controller: DtWebBundle:Api:locations }
+    options:
+        expose: true
+        
+
+dt_api_countries:
+    path:       /api/countries
+    defaults:   { _controller: DtWebBundle:Api:countries }
+    options:
+        expose: true
+        
+dt_api_route:
+    path:       /api/route/{startLocation}-{endLocation}
+    defaults:   { _controller: DtWebBundle:Api:route }
+    options:
+        expose: true

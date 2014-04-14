@@ -20,6 +20,7 @@ class AppKernel extends Kernel
             new Dt\CoreBundle\DtCoreBundle(),
             new Dt\WebBundle\DtWebBundle(),
             new Neo4j\OGM\OGMBundle\Neo4jOGMBundle(),
+            new JMS\SerializerBundle\JMSSerializerBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
