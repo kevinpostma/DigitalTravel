@@ -42,7 +42,7 @@
                     <img src="http://placehold.it/100x100" alt="image"/>
                 </div>
                 <div class="col-xs-10 dt-poi-detail">
-                    <h1>{{ poi.title }}</h1>
+                    <h1>{{ poi.name }} <small>{{poi.region.region}}</small></h1>
                     <p>{{ poi.description }}</p>
                     <rating class="dt-rating" value="poi.rating" max="maxRate" readonly="true" on-hover="hoveringOver(value)" on-leave="overStar = null"></rating>
                 </div>

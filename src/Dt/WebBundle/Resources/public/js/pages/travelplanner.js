@@ -3,16 +3,21 @@ var contactApp = angular.module('travelplannerApp', ['ngAnimate', 'ui.bootstrap'
 contactApp.controller('travelplannerController', function($scope, $timeout, $http) {
 
     $scope.errors = new Array();
-    $scope.locations = null;
+    $scope.locations = new Array();
+    $scope.pois = new Array();
+    $scope.routePois = new Array();
     $scope.route = null;
+    $scope.calculatingRoute = false;
     
     $scope.init = function() {
         $scope.getLocations();
+        $scope.getPois();
     }
     
-    $scope.calculateRoute = function (from_location, to_location) {
+    $scope.calculateRoute = function (from_location, to_location, filters) {
+        $scope.calculatingRoute = true;
         var url = Routing.generate('dt_api_route', {'startLocation' : from_location.id, 'endLocation' : to_location.id});
-        $http({method: 'GET', url: url}).success(function(data, status, headers, config) {
+        $http({method: 'POST', url: url, data : {'filters' : filters}}).success(function(data, status, headers, config) {
             $scope.route = data;
             $scope.$broadcast('routeChange',$scope.route);
         });
@@ -30,14 +35,22 @@ contactApp.controller('travelplannerController', function($scope, $timeout, $htt
             }
         });
         
-        $scope.calculateRoute(from, to);
+        $scope.calculateRoute(from, to, data.filters);
     });
     
     $scope.getLocations = function() {
         var url = Routing.generate('dt_api_locations', {});
-        $http({method: 'GET', url: url}).success(function(data, status, headers, config) {
+        $http({method: 'GET', url: url}).success(function(data, status, headers, config) {        
             $scope.locations = data;
             $scope.$broadcast('locationsChange',$scope.locations);
+        });
+    }
+    
+    $scope.getPois = function() {
+        var url = Routing.generate('dt_api_pois', {offset: 0, limit: 0});
+        $http({method: 'GET', url: url}).success(function(data, status, headers, config) {        
+            $scope.pois = data.items;
+            $scope.$broadcast('poisChange',$scope.pois);
         });
     }
 
@@ -57,34 +70,46 @@ contactApp.controller('mapsController', function($scope, $timeout, $http) {
         
     }
     
-    $scope.$on('routeChange', function(event, data){ 
+    $scope.$on('routeChange', function(event, data){
 
+
+        $.each($scope.polyline.path, function() {
+            $scope.polyline.path.pop();
+        });
+            
         $.each(data, function(key ,val ){ 
             var Marker = {
-                "latitude" : val.latitude,
-                "longitude" : val.longitude,
+                "coords" : {
+                    "latitude" : val.latitude,
+                    "longitude" : val.longitude
+                },
                 "showWindow" : true,
                 "title" : val.name
-            }
+            };
+            
+            $.each($scope.markers.models, function (key, val){
+                if($scope.markers.models.length > 1) {
+                    $scope.markers.models.shift();
+                }
+            });
+            
             $scope.markers.models.push(Marker);
-            $scope.polyline.path = [];
-            $scope.polyline.path.push({ latitude : Marker.latitude, longitude : Marker.longitude});
+            $scope.polyline.path.push({ latitude : Marker.coords.latitude, longitude : Marker.coords.longitude});
         });
         
-        console.debug($scope.markers.models);
-        console.debug('refresh');
         $scope.map.refresh = true;
         $scope.map.refresh = false;
+        $scope.$parent.calculatingRoute = false;
     });
     
     $scope.markers = {
-        models : new Array()
+        models : []
     }
     
     $scope.polyline = {
         visible: true,
-        editable: true,
-        draggable: true,
+        editable: false,
+        draggable: false,
         geodesic : true,
         stroke : {
             weight: 3,
@@ -92,7 +117,7 @@ contactApp.controller('mapsController', function($scope, $timeout, $http) {
         },
         path : [
             { latitude: 32.00, longitude: -89.00 },
-            { latitude: 39.00, longitude: -95.00 },
+            { latitude: 32.00, longitude: -89.00 },
         ]
     }
     
@@ -108,6 +133,54 @@ contactApp.controller('mapsController', function($scope, $timeout, $http) {
 
 });
 
+
+contactApp.controller('poiController', function($scope, $timeout, $http) {
+    
+    $scope.getPois = function(regionid) {
+        var url = Routing.generate('dt_api_pois_by_region', {region : regionid});
+        $http({method: 'GET', url: url}).success(function(data, status, headers, config) {
+            
+            
+            
+            
+            
+            $.each(data, function(key, val ){
+                
+                var found = false;
+                
+                $.each($scope.$parent.routePois, function(key1, val1){
+                    if(val.id == val1.id) {
+                        found = true;
+                    }
+                });
+                
+                if(found == false) {
+                    $scope.$parent.routePois.push(val);
+                }
+                
+            });
+            
+        });
+    }
+    
+    $scope.$on('routeChange', function(event, data){
+        $.each(data, function(key, val){
+            $scope.getPois(val.region.id);
+        });
+    });
+    
+    $scope.init = function () {
+        
+    }
+    
+    $scope.clearPois = function() {
+        $.each($scope.pois, function(key, val) {
+            $scope.$parent.routePois.pop();
+        });
+    }
+});
+
+
 contactApp.controller('filterController', function($scope, $timeout, $http) {
 
     $scope.filters = [];
@@ -116,7 +189,7 @@ contactApp.controller('filterController', function($scope, $timeout, $http) {
     $scope.to_location = undefined;
     
     $scope.locations = new Array();
-    $scope.pois = ['Eiffeltoren', 'Madame Tusseaud', 'Berlijnse muur', 'Notre dame', 'Vrijheidsbeeld'];
+    $scope.pois = new Array();
     
     $scope.$on('locationsChange', function(event, data){    
         if($scope.$parent.locations instanceof Array){
@@ -126,9 +199,26 @@ contactApp.controller('filterController', function($scope, $timeout, $http) {
         }
     });
     
+    $scope.$on('poisChange', function(event, data){
+        if($scope.$parent.pois instanceof Array){
+            $.each($scope.$parent.pois, function(key, val){
+                $scope.pois[val.id] = val.name;
+            });
+        }
+    });
+    
     $scope.calculateRoute = function () {
-        $scope.$emit('calculateRoute',{'from' : $scope.from_location, 'to' : $scope.to_location});
+        $scope.$emit('calculateRoute',{'from' : $scope.from_location, 'to' : $scope.to_location, 'filters' : $scope.filters});
     }
+    
+    $scope.addFilter = function() {
+         $scope.filters.push({
+             'type' : 'locations',
+             'value' : 'Amsterdam',
+             'method' : 'en',
+         });
+     };
+    
     
     $scope.init = function () {
     }

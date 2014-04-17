@@ -49,14 +49,124 @@ class ApiController extends Controller
         return $response;
     }
     
-    public function routeAction($startLocation,$endLocation)
+    public function getPoisByRegionAction($region)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $poiRepository = $em->getRepository('DtCoreBundle:Tags');
+        $regionRepository = $em->getRepository('DtCoreBundle:Regions');
+        
+        $region = $regionRepository->find($region);
+        
+        $serializer = $this->get('jms_serializer');
+        $response = new \Symfony\Component\HttpFoundation\Response();
+        $response->setContent($serializer->serialize($region->getTag(), 'json'));
+        $response->setStatusCode(200);
+        
+        return $response;
+    }
+    
+    
+    public function getAllPoisAction($offset, $limit)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $poiRepository = $em->getRepository('DtCoreBundle:Tags');
+        
+        if($limit == 0) {
+            $pois = $poiRepository->findAll();
+        } else {
+            $pois = $poiRepository->findBy(array(), null, $limit, $offset);
+        }
+        $count = $em->createQuery('SELECT COUNT(t.id) FROM DtCoreBundle:Tags t')->getSingleScalarResult();
+        
+        
+        $result = array(
+            'items' => $pois,
+            'total' => $count,
+        );
+        
+        $serializer = $this->get('jms_serializer');
+        $response = new \Symfony\Component\HttpFoundation\Response();
+        $response->setContent($serializer->serialize($result, 'json'));
+        $response->setStatusCode(200);
+        
+        return $response;
+    }
+    
+    
+    public function routeAction($startLocation,$endLocation, \Symfony\Component\HttpFoundation\Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         
-        $locations = $this->getRoute($startLocation, $endLocation);
+        $content = $this->get("request")->getContent();
+        if (!empty($content))
+        {
+            $filters = json_decode($content, true); // 2nd param to get as array
+        }
         
-        foreach($locations as &$location) {
-            $location = $this->getLocation($location);
+        
+        $filterLocations = array();
+        foreach($filters['filters'] as $filter) {
+            if($filter['type'] == 'locations') {
+                $location = $this->getLocationByName($filter['value']);
+                if($location != null) {
+                    $filterLocations[] = $location;
+                }
+            }
+        }
+        
+        
+        if(count($filterLocations) > 0) {
+            
+            $locations = array();
+            while(count($filterLocations) > 0) {
+                
+                $tempRoutes = array();
+                /** Add first location **/
+                foreach($filterLocations as $stopLocation) {
+                    $tempRoutes[] = $this->getRoute($startLocation, $stopLocation->getId());
+                }
+                
+                while(count($tempRoutes) > 1) {
+                    if($tempRoutes[0] > $tempRoutes[1]) {
+                        unset($tempRoutes[0]);
+                    } else {
+                        unset($tempRoutes[1]);
+                    }
+                }
+                
+                $shortestRoute = $tempRoutes[0];
+                
+                foreach($shortestRoute as &$location) {
+                    $location = $this->getLocation($location);
+                    $locations [] = $location;
+                }
+                
+                $deletableLocation = end($shortestRoute);
+                
+                foreach($filterLocations as $key => $val) {
+                    if($val->getId() == $deletableLocation->getId()) {
+                        unset($filterLocations[$key]);
+                        break;
+                    }
+                }
+                
+            }
+            
+            $lastStartLocation = end($locations);
+            $tempRoute =  $this->getRoute($lastStartLocation->getId(), $endLocation);
+            
+            foreach($tempRoute as $location) {
+                $location = $this->getLocation($location);
+                $locations[] = $location;
+            }
+            
+            
+        } else {
+            $locations = $this->getRoute($startLocation, $endLocation);
+
+            foreach($locations as &$location) {
+                $location = $this->getLocation($location);
+            }
         }
         
         $serializer = $this->get('jms_serializer');
@@ -74,6 +184,14 @@ class ApiController extends Controller
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository('DtCoreBundle:Locations');
         return $repository->find($locationId);
+    }
+    
+    private function getLocationByName($name)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('DtCoreBundle:Locations');
+        $location = $repository->findOneBy(array('city' => $name));
+        return $location;
     }
 
 

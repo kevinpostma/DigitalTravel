@@ -24,7 +24,7 @@ contactApp.controller('listController', function($scope, $timeout, $http) {
 
     $scope.getItems = function(start, limit) {
         $scope.pois = [];
-        var url = Routing.generate('dt_web_point_of_interests_pagination', {start: start, limit: limit});
+        var url = Routing.generate('dt_api_pois', {offset: start, limit: limit});
         $timeout(function () {
             $http({method: 'GET', url: url}).success(function(data, status, headers, config) {
                 $scope.totalItems = data.total;
@@ -44,7 +44,6 @@ contactApp.controller('listController', function($scope, $timeout, $http) {
     });
 
     $scope.init = function() {
-        $scope.getItems(0, $scope.maxPerPage)
     }
 
 
@@ -57,7 +56,7 @@ contactApp.controller('filterController', function($scope, $timeout, $http) {
     $scope.tags = [];
 
     $scope.init = function() {
-        $scope.getCountries();
+//        $scope.getCountries();
         $scope.getTags();
     };
     

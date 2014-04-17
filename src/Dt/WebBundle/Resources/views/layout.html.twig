@@ -42,7 +42,9 @@
             <div class="row">
                 <div class="col-lg-12 dt-header">
                     <div class="col-xs-4">
-                        <img src="http://placehold.it/350x100" alt="logo"/>
+                    {% image '@DtWebBundle/Resources/public/images/digitaltravel.png' %}
+                        <img src="{{ asset_url }}" alt="logo"/>
+                    {% endimage %}
                     </div>
                     <div class="col-xs-4">
                         <ul>

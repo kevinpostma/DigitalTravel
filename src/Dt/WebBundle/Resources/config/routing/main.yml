@@ -58,3 +58,15 @@ dt_api_route:
     defaults:   { _controller: DtWebBundle:Api:route }
     options:
         expose: true
+        
+dt_api_pois_by_region:
+    path:       /api/pois/region/{region}
+    defaults:   { _controller: DtWebBundle:Api:getPoisByRegion }
+    options:
+        expose: true
+        
+dt_api_pois:
+    path:       /api/pois/all/{offset}-{limit}
+    defaults:   { _controller: DtWebBundle:Api:getAllPois, limit: 10, offset: 0 }
+    options:
+        expose: true
